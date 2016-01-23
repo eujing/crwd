@@ -1,0 +1,3 @@
+javac DataSimulator.java
+java DataSimulator
+pause
