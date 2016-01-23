@@ -1,16 +1,26 @@
+const {AppBar} = mui;
+const Styles = mui.Styles;
+
 App = React.createClass({
-    renderMap() {
-        return <p>Map should be here or smthng</p>;
+    childContextTypes: {
+        muiTheme: React.PropTypes.object
+    },
+
+    getChildContext() {
+        return {
+            muiTheme: Styles.ThemeManager.getMuiTheme(Styles.LightRawTheme)
+        };
     },
 
     render() {
         return (
             <div className="container">
-                <p>Hello World!</p>
+                <AppBar
+                    title="CRWD"
+                    iconClassNameRight="muidocs-icon-navigation-expand-more"
+                />
 
-                <div id="map">
-                    {this.renderMap()}
-                </div>
+                <CrwdMap />
             </div>
         );
     }

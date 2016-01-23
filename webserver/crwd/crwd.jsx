@@ -1,5 +1,5 @@
 if (Meteor.isClient) {
     Meteor.startup(function () {
-        React.render(<App />, documentgetElementById("render-target"));
+        ReactDOM.render(<App />, document.getElementById("render-target"));
     });
 }
