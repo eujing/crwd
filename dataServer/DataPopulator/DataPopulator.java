@@ -14,7 +14,7 @@ public class DataPopulator {
 			segment = segment + "00";
 		}
 		dist = "";
-		for(int i = 0; i < 24; i++) {
+		for(int i = 0; i < 24*7; i++) {
 			dist = dist + segment;
 		}
 	}

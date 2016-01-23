@@ -1,4 +1,6 @@
 import java.net.*;
+import java.util.*;
+import java.io.*;
 
 public class DataReceiver {
 
@@ -13,7 +15,18 @@ public class DataReceiver {
 			ServerSocket serverSocket = new ServerSocket(port);
 			while(true) {
 				Socket clientSocket = serverSocket.accept();
-				System.out.println("ok");
+				
+				BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+				try {
+					int sensor = Integer.parseInt(br.readLine());
+					double value = Double.parseDouble(br.readLine());
+					int delta = Integer.parseInt(br.readLine());
+
+					System.out.println(sensor + " " + value + " " + delta);
+				}
+				catch(Exception e) {
+					e.printStackTrace();
+				}
 				clientSocket.close();
 			}
 		} catch(Exception e) {
