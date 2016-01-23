@@ -5,7 +5,7 @@ import java.util.*;
 import java.io.*;
 
 public class DataPopulator {
-
+	
 	public static String dist;
 
 	static {

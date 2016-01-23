@@ -4,14 +4,16 @@ import java.io.*;
 
 public class DataSimulator {
 
+	private final int epoch = 24220000;
+	private final int speed = 240;
+
 	private final String address = "192.168.1.100";
 	private final int port = 40274;
 	private final SocketAddress socketAddress = new InetSocketAddress(address,port);
 	private final int timeout = 300;
 
 	private final int[] sensors = {0,1,2,3,4,5,6,7,8,9};
-	private final int speed = 240;
-	private final int interval = 15;	//Every 15 min
+	private final int interval = 15 * 60;	//Every 15 min
 	private int delay;
 
 	private Random r;
@@ -21,7 +23,7 @@ public class DataSimulator {
 	}
 
 	public DataSimulator() {
-		delay = (int)((interval*60000f)/speed/sensors.length);
+		delay = (int)(((double)interval * 1000)/speed/sensors.length);
 		r = new Random();
 		while(true) {
 			for (int sensor : sensors) {
@@ -34,7 +36,7 @@ public class DataSimulator {
 
 					pw.println(sensor);
 					pw.println(value);
-					pw.println(interval * 60 / 2);
+					pw.println(interval);
 
 					socket.close();
 				} catch(Exception e) {
