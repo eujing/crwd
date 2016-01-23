@@ -1,17 +1,17 @@
 import java.net.*;
 import java.util.*;
 import java.io.*;
+import org.json.simple.*;
 
 public class DataSimulator {
 
 	private final String address = "192.168.1.100";
-	private final int port = 40274;
+	private final int port = 37825;
 	private final SocketAddress socketAddress = new InetSocketAddress(address,port);
-	private final int timeout = 300;
+	private final int timeout = 250;
 
 	private final int[] sensors = {0,1,2,3,4,5,6,7,8,9};
-	private final int interval = 60;	//Every 60 min
-	private int delay;
+	private final long interval = 30*60*1000;	//Every 30 min
 
 	private Random r;
 
@@ -20,7 +20,7 @@ public class DataSimulator {
 	}
 
 	public DataSimulator() {
-		delay = (int)(((double)interval * 60000)/DataTime.speed/sensors.length);
+		long delay = interval/TimeUtils.speed/sensors.length;
 		r = new Random();
 		while(true) {
 			for (int sensor : sensors) {
@@ -31,10 +31,14 @@ public class DataSimulator {
 
 					double value = 0.5d + 0.3d * r.nextDouble();
 
-					pw.println(sensor);
-					pw.println(value);
-					pw.println(interval / 2);
+					JSONObject obj = new JSONObject();
+					obj.put("function","pushData");
+					obj.put("sensor",sensor);
+					obj.put("value",value);
+					obj.put("offset",interval/2);
 
+					pw.println(obj.toString());
+					pw.close();
 					socket.close();
 				} catch(Exception e) {
 					e.printStackTrace();

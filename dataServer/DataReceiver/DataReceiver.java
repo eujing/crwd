@@ -6,9 +6,6 @@ import java.util.logging.*;
 
 public class DataReceiver {
 
-	private final int epoch = 24220000;
-	private final int speed = 240;
-
 	private final int port = 40274;
 
 	public static void main(String args[]) {
@@ -27,11 +24,12 @@ public class DataReceiver {
 					int sensor = Integer.parseInt(br.readLine());
 					double value = Double.parseDouble(br.readLine());
 					int delta = Integer.parseInt(br.readLine());
-					int time = getTime(new Date().getTime() - delta);
+					int time = DataTime.getTime(new Date().getTime() - delta * 60000l);
 
 					SQLiteConnection db = new SQLiteConnection(new File("./../db.sqlite3"));
 					db.open();
 					db.exec("INSERT INTO data VALUES (" + sensor + "," + time + "," + value + ")");
+					db.dispose();
 
 					System.out.println("Data from : " + sensor);
 					System.out.println("Time      : " + time);
@@ -46,11 +44,6 @@ public class DataReceiver {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private int getTime(long time) {
-		int mins = (int)((time - (long)epoch * 1000 * 60) / 1000d / 60d * speed);
-		return epoch + mins;
 	}
 
 }

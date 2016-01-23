@@ -30,7 +30,7 @@ public class DataPopulator {
 			db.open();
 
 			db.exec("CREATE TABLE locations (id INT PRIMARY KEY NOT NULL, title TEXT NOT NULL, address TEXT NOT NULL, lat REAL NOT NULL, long REAL NOT NULL)");
-			db.exec("CREATE TABLE sensors (id INT PRIMARY KEY NOT NULL, location INT NOT NULL, title TEXT NOT NULL, dist TEXT NOT NULL, FOREIGN KEY(location) REFERENCES locations(id))");
+			db.exec("CREATE TABLE sensors (id INT PRIMARY KEY NOT NULL, location INT NOT NULL, title TEXT NOT NULL, dist CHARACTER(336) NOT NULL, FOREIGN KEY(location) REFERENCES locations(id))");
 			db.exec("CREATE TABLE data (sensor INT, time INT, value REAL, PRIMARY KEY(sensor,time))");
 			
 			CSVParser parser;
