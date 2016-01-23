@@ -1,3 +1,3 @@
-javac -cp "./..;./../json_simple.jar;%CLASSPATH%" DataSimulator.java
-java -cp "./..;./../json_simple.jar;%CLASSPATH%" DataSimulator
+javac -cp "./..;./../org.json.jar;%CLASSPATH%" DataSimulator.java
+java -cp "./..;./../org.json.jar;%CLASSPATH%" DataSimulator
 pause

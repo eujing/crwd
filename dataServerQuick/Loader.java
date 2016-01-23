@@ -17,15 +17,15 @@ public class Loader {
 				String title = list.get(i).get(1);
 				String address = list.get(i).get(2);
 				double latitude = Double.parseDouble(list.get(i).get(3));
-				double longtitude = Double.parseDouble(list.get(i).get(4));
-				locations.add(new Location(title,address,latitude,longtitude));
+				double longitude = Double.parseDouble(list.get(i).get(4));
+				locations.add(new Location(title,address,latitude,longitude));
 			}
 			parser = CSVParser.parse(new File(S_PATH),StandardCharsets.UTF_8,CSVFormat.DEFAULT);
 			list = parser.getRecords();
 			for ( int i = 1; i < list.size(); i++ ) {
 				int location = Integer.parseInt(list.get(i).get(1));
 				String title = list.get(i).get(2);
-				Sensor sensor = new Sensor(title);
+				Sensor sensor = new Sensor(Integer.parseInt(list.get(i).get(0)),title);
 				sensors.add(sensor);
 				locations.get(location).addSensor(sensor);
 			}

@@ -4,12 +4,14 @@ public class Sensor {
 
 	public static final double border = 0.15d;
 
+	public int id;
 	public String title;
 	public double[][] dist;
 	public double[][] bounds;
 	public ArrayList<Datum> data;
 
-	public Sensor (String title) {
+	public Sensor (int id, String title) {
+		this.id = id;
 		this.title = title;
 		dist = new double[24*7][32];
 		bounds = new double[24*7][2];

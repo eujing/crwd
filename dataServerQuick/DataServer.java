@@ -1,8 +1,7 @@
 import java.net.*;
 import java.util.*;
 import java.io.*;
-import org.json.simple.*;
-import org.json.simple.parser.*;
+import org.json.*;
 
 public class DataServer {
 
@@ -38,15 +37,56 @@ public class DataServer {
 				}
 
 				try {
-					InputStreamReader inputStreamReader = new InputStreamReader(clientSocket.getInputStream(), "UTF-8");
-					JSONParser parser = new JSONParser();
-					JSONObject obj = (JSONObject)parser.parse(inputStreamReader);
+					Scanner sc = new Scanner(clientSocket.getInputStream());
+					PrintWriter pw = new PrintWriter(clientSocket.getOutputStream(), true);
+					do {
+						if (!sc.hasNextLine()) break;
+						JSONObject obj = new JSONObject(sc.nextLine());
+						String function = obj.getString("function");
 
-					String function = (String)obj.get("function");
-					if (function.equals("pushData")) {
-						pushData(obj);
-					}
-					//Handle other functions
+						System.out.println(function);
+
+						if (function.equals("pushData")) {
+							pushData(obj);
+							break;
+						}
+						else if (function.equals("listLocations")) {
+							JSONArray list = new JSONArray();
+							for(int i = 0; i < locations.size(); i++) {
+								Location location = locations.get(i);
+								JSONObject loc = new JSONObject();
+								loc.put("id",i);
+								loc.put("title",location.title);
+								loc.put("address",location.address);
+								loc.put("latitude",location.latitude);
+								loc.put("longitude",location.longitude);
+								list.put(loc);
+							}
+							JSONObject reply = new JSONObject();
+							reply.put("locations",list);
+							pw.println(reply.toString());
+						}
+						else if (function.equals("listSensors")) {
+							int id = obj.getInt("location");
+							Location location = locations.get(id);
+							JSONArray list = new JSONArray();
+							for(int i = 0; i < location.sensors.size(); i++) {
+								Sensor sensor = location.sensors.get(i);
+								JSONObject sen = new JSONObject();
+								sen.put("id",sensor.id);
+								sen.put("location",id);
+								sen.put("title",sensor.title);
+								list.put(sen);
+							}
+							JSONObject reply = new JSONObject();
+							reply.put("sensors",list);
+							pw.println(reply.toString());
+						}
+						else break;
+					} while(true);
+
+					sc.close();
+					pw.close();
 				} catch(Exception e) {
 					e.printStackTrace();
 				}
@@ -58,10 +98,10 @@ public class DataServer {
 		}
 	}
 
-	public void pushData(JSONObject obj) {
-		long time = TimeUtils.getTime(new Date().getTime()) - (long)obj.get("offset");
-		double value = (double)obj.get("value");
-		int sensor = (int)((long)obj.get("sensor"));
+	public void pushData(JSONObject obj) throws JSONException {
+		long time = TimeUtils.getTime(new Date().getTime()) - obj.getLong("offset");
+		double value = obj.getDouble("value");
+		int sensor = obj.getInt("sensor");
 
 		Datum datum = new Datum(time,value);
 		sensors.get(sensor).addDatum(datum);
