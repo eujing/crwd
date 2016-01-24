@@ -17,7 +17,7 @@ svg-container {
 }
 
 svg {
-    font: 10px sans-serif;
+    font: 7px sans-serif;
 }
 
 .tick text {
@@ -28,11 +28,16 @@ svg {
 .line {
     fill: none;
     stroke: #5D94D7;
-    stroke-width: 1.5px;
+    stroke-width: 1px;
+}
+
+.current {
+    stroke: #0073FF;
+    stroke-width: 2.0px;
 }
 
 .area {
-    fill: rgba(65, 140, 166, 0.3);
+    fill: rgba(188, 220, 230, 0.17);
     stroke-width: 0;
 }
 

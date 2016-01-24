@@ -15,7 +15,7 @@ Location = React.createClass({
 
     renderSensors() {
         return this.data.sensors.map((sensor) => {
-            return <Sensor key={sensor.id} sensor={sensor} />;
+            return <Sensor key={sensor._id} sensor={sensor} />;
         });
     },
 
@@ -37,10 +37,10 @@ Location = React.createClass({
                             graphId={"loc-" + this.props.location.id}
                             rangeData={this.props.location.rangeData}
                             trendData={this.props.location.trendData}
-                            timeMin={this.props.location.timeMin}
-                            timeMax={this.props.location.timeMax}
+                            timeMin={this.props.location.minTime}
+                            timeMax={this.props.location.maxTime}
                             outerWidth={640}
-                            outerHeight={480}
+                            outerHeight={160}
                             margin={{left:40, right:20, top:20, bottom:20}} />
                     </CardMedia>
                 </Card>

@@ -31,6 +31,23 @@ GoogleMap = React.createClass({
         });
     },
 
+    componentWillUpdate(newProps) {
+        let newPositions = _.filter(newProps.positions, (x) => !_.findWhere(this.props.positions, x)); //Diff the two arrays
+
+        GoogleMaps.ready(this.props.name, function(map) {
+            for (let position of newPositions) {
+                let marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(position.latitude, position.longitude),
+                    map: map.instance
+                });
+
+                marker.addListener("click", () => {
+                    newProps.onMarkerClick(position.latitude, position.longitude);
+                });
+            }
+        });
+    },
+
     componentWillUnmount() {
         if (GoogleMaps.maps[this.props.name]) {
             google.maps.event.clearInstanceListeners(GoogleMaps.maps[this.props.name].instance);
@@ -65,7 +82,7 @@ CrwdMap = React.createClass({
     _mapOptions() {
         return {
             center: new google.maps.LatLng(1.352083, 103.81983600000001), //Singapore lat long
-            zoom: 8
+            zoom: 11 
         };
     },
 

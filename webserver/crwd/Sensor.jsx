@@ -20,10 +20,10 @@ Sensor = React.createClass({
                         graphId={"sensor-" + this.props.sensor.id}
                         rangeData={this.props.sensor.rangeData}
                         trendData={this.props.sensor.trendData}
-                        timeMin={this.props.sensor.timeMin}
-                        timeMax={this.props.sensor.timeMax}
+                        timeMin={this.props.sensor.minTime}
+                        timeMax={this.props.sensor.maxTime}
                         outerWidth={640}
-                        outerHeight={480}
+                        outerHeight={160}
                         margin={{left:40, right:20, top:20, bottom:20}} />
                 </CardMedia>
             </Card>

@@ -2,6 +2,8 @@ const {AppBar, Card, CardHeader, CardMedia} = mui;
 const Styles = mui.Styles;
 
 App = React.createClass({
+    mixins: [ReactMeteorData],
+
     childContextTypes: {
         muiTheme: React.PropTypes.object
     },
@@ -16,6 +18,12 @@ App = React.createClass({
         return {
             selectedLocation: false,
             locationPosition: null,
+        };
+    },
+
+    getMeteorData() {
+        return {
+            location: Locations.find(this.state.locationPosition).fetch()[0]
         };
     },
 
@@ -40,11 +48,14 @@ App = React.createClass({
                 </div>
                 
                 <div className="row">
-                    <Card>
+                    <Card 
+                        initiallyExpanded={true} >
                         <CardHeader
                             title="Map"
-                            subtitle="Singapore" />
-                        <CardMedia>
+                            subtitle="Singapore" 
+                            actAsExpander={true} 
+                            showExpandableButton={true} />
+                        <CardMedia expandable={true}>
                             <CrwdMap onMarkerClick={this.onMarkerClick}/>
                         </CardMedia>
                     </Card>
@@ -52,7 +63,7 @@ App = React.createClass({
                     
                     {
                     this.state.selectedLocation ? 
-                    <Location location={Locations.find(this.state.locationPosition).fetch()[0]}/> : ""
+                    <Location location={this.data.location}/> : ""
                     }
             </div>
         );
