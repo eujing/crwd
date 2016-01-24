@@ -5,7 +5,7 @@ import org.json.*;
 
 public class JSONSimulator {
 
-	private final String address = "192.168.1.101";
+	private final String address = "127.0.0.1";
 	private final int port = 37825;
 
 	public static void main(String args[]) {
@@ -18,8 +18,10 @@ public class JSONSimulator {
 			PrintWriter pw = new PrintWriter(socket.getOutputStream(), true);
 
 			JSONObject obj = new JSONObject();
-			obj.put("function","listSensors");
+			obj.put("function","getLocation");
 			obj.put("location",3);
+			obj.put("tFront",3d);
+			obj.put("tBack",3d);
 			pw.println(obj.toString());
 
 			Scanner sc = new Scanner(socket.getInputStream());
@@ -28,6 +30,7 @@ public class JSONSimulator {
 
 			sc.close();
 			pw.close();
+
 			socket.close();
 		} catch(Exception e) {
 			e.printStackTrace();

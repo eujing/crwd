@@ -1,6 +1,6 @@
 id,location,title
 0,0,Tan Kah Kee MRT Entrance
-1,1,T- Junction
+1,1,Bedok Bus Interchange 
 2,2,Tampines Underpass
 3,2,Tampines Overhead Bridge
 4,2,Tampines Carpark
@@ -8,4 +8,4 @@ id,location,title
 6,4,321Clementi Building Entrance
 7,5,Monorail entrance
 8,6,Hospital entrance
-9,7,School back gate
+9,7,Newton MRT Exit C
