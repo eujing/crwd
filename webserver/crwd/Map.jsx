@@ -3,23 +3,48 @@ const GOOGLE_MAPS_API_KEY = "AIzaSyCVsN6mRr4QqKHNB6sOGAcCjhGmklvcuiM";
 GoogleMap = React.createClass({
     propTypes: {
         name: React.PropTypes.string.isRequired,
-        options: React.PropTypes.object.isRequired
+        options: React.PropTypes.object.isRequired,
+        positions: React.PropTypes.array.isRequired,
+        onMarkerClick: React.PropTypes.func.isRequired,
     },
 
+    //componentWillUpdate
     componentDidMount() {
-        console.log("hello");
-
         GoogleMaps.create({
             name: this.props.name,
             element: ReactDOM.findDOMNode(this),
             options: this.props.options
         });
+    
+        let props = this.props;
+        GoogleMaps.ready(this.props.name, function(map) {
+            for (let position of props.positions) {
+                let marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(position.latitude, position.longitude),
+                    map: map.instance
+                });
+
+                marker.addListener("click", () => {
+                    props.onMarkerClick(position.latitude, position.longitude);
+                });
+            }
+        });
+    },
+
+    componentWillUpdate(newProps) {
+        let newPositions = _.filter(newProps.positions, (x) => !_.findWhere(this.props.positions, x)); //Diff the two arrays
 
         GoogleMaps.ready(this.props.name, function(map) {
-            var marker = new google.maps.Marker({
-                position: map.options.center,
-                map: map.instance
-            });
+            for (let position of newPositions) {
+                let marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(position.latitude, position.longitude),
+                    map: map.instance
+                });
+
+                marker.addListener("click", () => {
+                    newProps.onMarkerClick(position.latitude, position.longitude);
+                });
+            }
         });
     },
 
@@ -38,6 +63,10 @@ GoogleMap = React.createClass({
 CrwdMap = React.createClass({
     mixins: [ReactMeteorData],
 
+    propTypes: {
+        onMarkerClick: React.PropTypes.func.isRequired,
+    },
+
     componentDidMount() {
         GoogleMaps.load({key: GOOGLE_MAPS_API_KEY});
     },
@@ -45,21 +74,28 @@ CrwdMap = React.createClass({
     getMeteorData() {
         return {
             loaded: GoogleMaps.loaded(),
-            mapOptions: GoogleMaps.loaded() && this._mapOptions()
+            mapOptions: GoogleMaps.loaded() && this._mapOptions(),
+            locations: Locations.find({}).fetch()
         };
     },
 
     _mapOptions() {
         return {
             center: new google.maps.LatLng(1.352083, 103.81983600000001), //Singapore lat long
-            zoom: 8
+            zoom: 11 
         };
     },
 
     render() {
         if (this.data.loaded) {
-            return <GoogleMap name="crwdmap" options={this.data.mapOptions} />;
-            //return <div>Map loaded</div>;
+            let markers = this.data.locations.map((loc) => {
+                return {latitude: loc.latitude, longitude: loc.longitude};
+            });
+            return <GoogleMap
+                name="crwdmap" 
+                options={this.data.mapOptions} 
+                positions={markers}
+                onMarkerClick={this.props.onMarkerClick} />;
         }
         else {
             return <div>Loading map...</div>;
