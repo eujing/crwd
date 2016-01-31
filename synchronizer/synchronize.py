@@ -3,6 +3,19 @@ import socket
 import json
 import time
 from pprint import pprint
+import argparse
+
+parser = argparse.ArgumentParser(description="Synchronizes CRWD MongoDB with java DataServer")
+parser.add_argument(
+        "--ip", 
+        help="IP Address of java DataServer",
+        default="127.0.0.1")
+parser.add_argument(
+        "--port",
+        help="Port of java DataServer",
+        default=37825,
+        type=int)
+args = parser.parse_args()
 
 client = MongoClient("localhost", 3001)
 db = client.meteor
@@ -83,13 +96,11 @@ def updateMongoDB(s, db, winWidth):
 
 def main():
     
-    # pprint(listLocations(s))
-    # pprint(listSensors(s, 2))
-
     try:
         while True:
             s = socket.socket()
-            s.connect(("192.168.43.243", 37825))
+            # s.connect(("192.168.43.243", 37825))
+            s.connect((args.ip, args.port))
 
             updateMongoDB(s, db, 12.0)
             s.close()
